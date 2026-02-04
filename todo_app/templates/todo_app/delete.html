@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo_app: Update</title>
+</head>
+<body>
+    <h1>Delete task</h1>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <p>Are you sure what to delete the task? {{ task.title }}</p>
+            <button type="submit">Yes, delete Task</button>
+
+        </form>
+    </div>
+    {% endblock content %}

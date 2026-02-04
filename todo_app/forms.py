@@ -1,0 +1,9 @@
+#manage form
+from django import forms
+from .models import Task
+
+#class based forms
+class TaskCreateform(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['title','description','status','due_date']

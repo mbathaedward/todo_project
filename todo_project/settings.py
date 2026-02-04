@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'todo_app',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -115,3 +117,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [ BASE_DIR / 'static' ]
+
+
+
+
+#Authetication 
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/auth/login/'
+LOGIN_URL = '/login/'
+
+if DEBUG:
+    INTERNAL_IPS = ["127.0.0.1"]
+    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware",]
+    INSTALLED_APPS += ["debug_toolbar"] 
+
