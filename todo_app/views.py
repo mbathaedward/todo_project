@@ -1,65 +1,80 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .models import Task
 from .forms import TaskCreateform
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
+from django.views.generic import View,DetailView,CreateView,UpdateView,DeleteView
 
 
 # Create your views here.
 
-def task_list(request):
-    tasks = Task.objects.all()
-    paginator = Paginator(tasks, 5, orphans=4, allow_empty_first_page=True)
-    page = request.GET.get('page')
-    try:
+    
+class TaskListView(View):
+   template_name = 'todo_app/list.html'
+
+   def get(self, request):
+     tasks = Task.objects.all().order_by('status')
+     paginator = Paginator(tasks, 5, orphans=4, allow_empty_first_page=True)
+     page = request.GET.get('page')
+
+     try:
         paginated_tasks = paginator.page(page)
-    except PageNotAnInteger:
+     except PageNotAnInteger:
         paginated_tasks = paginator.page(1)
-    except EmptyPage:
+     except EmptyPage:
         paginated_tasks = paginated_tasks.page(paginator.num_pages)
 
-        
+     context = {'tasks':paginated_tasks, 'title':'list tasks' }
+   
+     return render(request, self.template_name,context )
+   
+class TaskDetailView(DetailView):
+   model = Task
+   template_name = 'todo_app/detail.html'
+   context_object_name = 'task'
 
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['title'] = Task
+      return context
+   
+class TaskCreateView(LoginRequiredMixin, CreateView):
+   model = Task
+   form = TaskCreateform
+   template_name = 'todo_app/create.html'
+   fields = ['title','description','status','due_date','author']
+   success_url = 'list'
 
-    title = 'List'
-    return render(request,'todo_app/list.html', {'tasks': paginated_tasks, 'title':title})
+   def get_context_data(self, **kwargs):
+      context =  super().get_context_data(**kwargs)
+      context['title'] = 'Create task'
+      return context
+   
 
-def task_detail(request, id):
-    task = get_object_or_404(Task, id=id)
-    title = 'Detail'
-    return render(request, 'todo_app/detail.html', {'task':task,'title':title})
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = Task
+    form = TaskCreateform
+    fields = ['title','description','status','due_date','author']
+    template_name = 'todo_app/update.html'
+    success_url = '/'
 
-def task_create(request):
-    if request.method == 'POST':
-        form = TaskCreateform(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('list')
-    else:
-        form = TaskCreateform()
-    title = 'Create'    
-
-
-    return render(request, 'todo_app/create.html', {'form':form,'title':title})
-
-def task_update(request, id):
-    task = get_object_or_404(Task, id=id)
-    if request.method == 'POST':
-        form = TaskCreateform(request.POST, instance=task)
-        if form.is_valid():
-         form.save()
-        return redirect('list')
-    else:
-        form = TaskCreateform(instance=task)
-        title = 'Update'
-
-    return render(request, 'todo_app/update.html', {'form':form,'title':title})
-
-def task_delete(request, id):
-    task = get_object_or_404(Task, id=id)
-    if request.method == 'POST':
-        task.delete()
-        return redirect('list')
-    title = 'Delete'
+    def get_context_data(self, **kwargs):
+      context =  super().get_context_data(**kwargs)
+      context['title'] = 'Update task'
+      return context
     
-    return render(request, 'todo_app/delete.html', {'task':task,'title':title})
+class TaskDeleteView(LoginRequiredMixin,DeleteView):
+      model = Task
+      template_name = 'todo_app/delete.html'
+      success_url = '/'
+
+      def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['title'] = 'Delete task'
+        return context
+
+   
+
+
 

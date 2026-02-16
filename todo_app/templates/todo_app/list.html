@@ -22,7 +22,8 @@
                     <th>Title</th>
                     <th>Status</th>
                     <th>Due Date</th>
-                    <th>Action</th>
+                    <th>Created by</th>
+                    <th>action</th>
 
                 </tr>
             </thead>
@@ -35,8 +36,10 @@
                             {{ task.title }}
                         </a>
                     </td>
+                    
                     <td>{{ task.status|task_status }}</td>
                     <td>{{ task.due_date }}</td>
+                    <td>{{ task.author.name }}</td>
                     <td>
                         <a class="btn" href="{% url 'detail' task.id %}">View</a>
                     </td>
