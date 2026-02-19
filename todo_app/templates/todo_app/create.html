@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo_app: create</title>
+</head>
+<body>
+    <h1>Add a new task</h1>
+    <div>
+        <form action="{% url 'create' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">create Task</button>
+
+        </form>
+    </div>
+    {% endblock content %}
