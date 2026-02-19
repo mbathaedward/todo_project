@@ -4,13 +4,18 @@ from .forms import TaskCreateform
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
-from django.views.generic import View,DetailView,CreateView,UpdateView,DeleteView
+from django.views.generic import View,DetailView,CreateView,UpdateView,DeleteView,ListView
+#Asynchoronus Programming
+import asyncio
+from asgiref.sync import sync_to_async
+from django.views import View
+from django.http import JsonResponse
 
 
 # Create your views here.
 
     
-class TaskListView(View):
+class TaskListView(ListView):
    template_name = 'todo_app/list.html'
 
    def get(self, request):
@@ -29,6 +34,15 @@ class TaskListView(View):
    
      return render(request, self.template_name,context )
    
+# class TaskListByApiView(ListView):
+#    model = Task
+#    template_name = 'todo_app/api.html'
+
+# class TaskListApiView(View):
+#    async def get(self, request):
+#       await asyncio.sleep(5)
+#       tasks = await sync_to_async(lambda: list(Task.objects.values().order_by('due_date')))()
+#       return JsonResponse(tasks, safe=False)
 class TaskDetailView(DetailView):
    model = Task
    template_name = 'todo_app/detail.html'

@@ -1,0 +1,22 @@
+<section>
+    <h1>API TASKS</h1>
+    <ul id="task_list"></ul>
+    <script>
+        async function fetchTasks() {
+            const response = await fetch('/api/tasks');
+            const tasks = await response.json();
+            const task_list = document.getElementById('task_list');
+            task_list.innerHTML = '';
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.textContent = `${task.title} - ${task.description}`;
+                task_list.appendChild(li);
+            })
+            
+        }
+     fetchTasks();
+       
+        
+    </script>
+</section>
+{% endblock content %}

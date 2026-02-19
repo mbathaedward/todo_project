@@ -9,4 +9,8 @@ urlpatterns = [
     path('delete/<int:pk>/', TaskDeleteView.as_view(), name='delete'),
     path('create/', TaskCreateView.as_view(), name='create'),
 
+    path('api/tasks', TaskListView.as_view(), name='api'),
+     path('api-list/', TaskListView.as_view(), name='api-list')
+
+
 ]
